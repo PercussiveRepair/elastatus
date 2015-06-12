@@ -1,7 +1,8 @@
 from flask import *
 import os
 from decorators import validate_account_and_region
-from aws import connect, route53
+#from aws import connect, route53
+from aws import connect
 from sgaudit import get_reports, add_description
 from app.models import IPWhitelist
 
@@ -75,18 +76,24 @@ def elasticache(account, region):
 
 @elastatus.route('/<account>/<region>/route53')
 def r53(account, region):
-    c, domain, zone_id = route53()    
+    c = connect(account, region, 'route53')
+    c = list(c)
+    conn = c.pop(0) 
+    d = list()
     r = list()
-    try:
-        records = c.get_all_rrsets(zone_id)
-        paginate = True
-        while paginate:
-            for item in records:
-                r.append(item)
-            paginate = records.next_token
-    except:
-        domain = None
-    return render_template('r53.html', domain=domain, records=r)
+    for hzitem in c[0]:
+        d.append(hzitem)
+        try:
+            records = conn.get_all_rrsets(hzitem)
+            paginate = True
+            while paginate:
+                for item in records:
+                    r.append(item)
+                paginate = records.next_token
+        except:
+            domain = None
+    d = d[::2]
+    return render_template('r53.html', domains=d, records=r)
 
 
 @elastatus.route('/<account>/<region>/rds')
