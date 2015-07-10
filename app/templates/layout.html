@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+1<!DOCTYPE HTML>
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -46,7 +46,7 @@
                   {{ current_account.capitalize() }}
                   {% else %}
                   Accounts
-                  {% endif %} <b class="caret"></b></a>
+                  {% endif %}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                 {% for account in config['CONFIG']['accounts'] %}
                   {% if current_service == 'sg' %}
@@ -97,11 +97,7 @@
                 <ul class="dropdown-menu">
                 {% for service in config['CONFIG']['aws']['services'] %}
                   <li>
-                    {% if service == "route53" %}
-                    <a href="/{{ config['CONFIG']['route53']['account'] }}/{{current_region}}/{{ service }}">{{ service.upper() }}</a></li>
-                    {% else %}
                     <a href="/{{ current_account }}/{{current_region}}/{{ service }}">{{ service.upper() }}</a></li>
-                    {% endif %}
                 {% endfor %}
                 </ul>
               </li>
