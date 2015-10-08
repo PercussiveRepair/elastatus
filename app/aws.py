@@ -104,12 +104,3 @@ def connect(account, region, service=None):
             result.append(zone_id)
         return conn, result
 
-
-# def route53():
-#     account = current_app.config['CONFIG']['route53']['account']
-#     aws_access_key_id = current_app.config['CONFIG']['accounts'][account]['aws_access_key_id']
-#     aws_secret_access_key  = current_app.config['CONFIG']['accounts'][account]['aws_secret_access_key']    
-#     domain = current_app.config['CONFIG']['route53']['domain']
-#     zone_id = current_app.config['CONFIG']['route53']['zone_id']
-#     c = boto.connect_route53(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-#     return c, domain, zone_id

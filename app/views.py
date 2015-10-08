@@ -1,8 +1,7 @@
 from flask import *
 import os
 from decorators import validate_account_and_region
-#from aws import connect, route53
-from aws import connect
+from aws import connect, r53
 from sgaudit import get_reports, add_description
 from app.models import IPWhitelist
 
@@ -11,9 +10,10 @@ elastatus  = Blueprint('elastatus', __name__)
 
 @elastatus.route('/')
 def index():
-    return redirect('/%s/%s/%s' % (current_app.config['CONFIG']['default_account'],
-                                   current_app.config['CONFIG']['default_region'],
-                                   current_app.config['CONFIG']['default_service']))
+    default_account = current_app.config['CONFIG']['default_account']
+    default_region  = current_app.config['CONFIG']['default_region']
+    default_service = current_app.config['CONFIG']['default_service']
+    return redirect(url_for('.'+default_service, account=default_account, region=default_region))
 
 
 @elastatus.route('/<account>/<region>/ec2')
@@ -22,6 +22,14 @@ def ec2(account, region):
     c = connect(account, region, 'ec2')
     instances = c.get_only_instances()
     return render_template('ec2.html', region=region, instances=instances)
+
+@elastatus.route('/<account>/<region>/ami')
+@validate_account_and_region
+def ami(account, region):
+    c = connect(account,region, 'ec2')
+    amis = c.get_all_images(owners = ['self'])
+    ami_list = {ami: c.get_image(ami.id) for ami in amis}
+    return render_template('ami.html', region=region, amis=ami_list)
 
 
 @elastatus.route('/<account>/<region>/ebs')
@@ -42,7 +50,7 @@ def snapshots(account, region):
 
 @elastatus.route('/<account>/<region>/autoscale')
 @validate_account_and_region
-def asg(account, region):
+def autoscale(account, region):
     c = connect(account, region, 'autoscale')
     asg = c.get_all_groups()
     return render_template('asg.html', region=region, asg=asg)
@@ -76,7 +84,7 @@ def elasticache(account, region):
 
 @elastatus.route('/<account>/<region>/route53')
 def r53(account, region):
-    c = connect(account, region, 'route53')
+    c, domain, zone_id = r53()
     c = list(c)
     conn = c.pop(0) 
     d = list()
@@ -170,6 +178,3 @@ def sgaudit(account, region):
     c = connect(account, region, 'ec2')
     report, empty_groups = get_reports(c)
     return render_template('sgaudit.html', report=report)
-
-
-
