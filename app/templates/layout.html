@@ -48,7 +48,7 @@
                   Accounts
                   {% endif %}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                {% for account in config['CONFIG']['accounts'] %}
+                {% for account in config['CONFIG']['accounts']|sort() %}
                   {% if current_service == 'sg' %}
                   <li><a href="{{ url_for('elastatus.ec2', account=current_account, region=current_region) }}">{{ account.capitalize() }}</a></li>
                   {% else %}
