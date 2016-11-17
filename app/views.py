@@ -107,7 +107,8 @@ def route53(account, region):
 def iam(account, region):
     c = connect(account, region, 'iam')
     users = c.get_all_users()
-    return render_template('iam.html', users=users[0])
+    users = users['Users']
+    return render_template('iam.html', users=users)
 
 
 @elastatus.route('/<account>/<region>/rds')
