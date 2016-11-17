@@ -106,7 +106,7 @@
                 <ul class="dropdown-menu">
                 {% for service in config['CONFIG']['aws']['services'] %}
                   <li>
-                    <a href="/{{ current_account }}/{{current_region}}/{{ service }}">{{ service.upper() }}</a></li>
+                    <a href="{{ url_for('elastatus.'+service, account=current_account, region=current_region) }}">{{ service.upper() }}</a></li>
                 {% endfor %}
                 </ul>
               </li>
