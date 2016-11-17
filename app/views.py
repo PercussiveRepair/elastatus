@@ -1,7 +1,7 @@
 from flask import *
 import os
 from decorators import validate_account_and_region
-from aws import connect, r53
+from aws import connect
 from sgaudit import get_reports, add_description
 from app.models import IPWhitelist
 
@@ -83,8 +83,8 @@ def elasticache(account, region):
 
 
 @elastatus.route('/<account>/<region>/route53')
-def r53(account, region):
-    c, domain, zone_id = r53()
+def route53(account, region):
+    c = connect(account, region, 'route53')
     c = list(c)
     conn = c.pop(0) 
     d = list()
