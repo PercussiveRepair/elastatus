@@ -107,6 +107,5 @@ def connect(account, region, service=None):
 
     elif service == 'iam':
         conn = boto.connect_iam(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-        results = conn.list-users()
-        return conn, results
+        return conn
 
