@@ -103,6 +103,13 @@ def r53(account, region):
     d = d[::2]
     return render_template('r53.html', domains=d, records=r)
 
+@elastatus.route('/<account>/<region>/iam')
+def iam(account, region):
+    c = connect(account, region, 'iam')
+    users = c.get_all_users()
+    users = users['Users']['Username']
+    return render_template('iam.html', users=users)
+
 
 @elastatus.route('/<account>/<region>/rds')
 def rds(account, region):

@@ -15,6 +15,7 @@ import boto.sns
 import boto.cloudformation
 import boto.route53
 import boto.redshift
+import boto.iam
 
 
 def connect(account, region, service=None):
@@ -103,4 +104,9 @@ def connect(account, region, service=None):
             result.append(domain)
             result.append(zone_id)
         return conn, result
+
+    elif service == 'iam':
+        conn = boto.connect_iam(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+        results = conn.list-users()
+        return conn, results
 
