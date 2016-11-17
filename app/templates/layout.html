@@ -1,4 +1,4 @@
-1<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -10,6 +10,11 @@
           body {
            padding-top: 60px;
            padding-bottom: 40px;
+        }
+        .scrollable-menu {
+           height: auto;
+           max-height: 480px;
+           overflow-x: hidden;
         }
         </style>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -41,20 +46,20 @@
                   {% set current_region = request.view_args.get('region') %}
                   {% set current_service = request.url_rule.rule.split('/')[3] %}
                   {% if current_account == '' %}
-                  Accounts
+                  sorted(Accounts)
                   {% elif config['CONFIG']['accounts'].has_key(current_account) %}
-                  {{ current_account.capitalize() }}
+                  {{ current_account }}
                   {% else %}
-                  Accounts
+                  sorted(Accounts)
                   {% endif %}<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                {% for account in config['CONFIG']['accounts'] %}
+                <ul class="dropdown-menu scrollable-menu">
+                {% for account in config['CONFIG']['accounts']|sort() %}
                   {% if current_service == 'sg' %}
-                  <li><a href="{{ url_for('elastatus.ec2', account=current_account, region=current_region) }}">{{ account.capitalize() }}</a></li>
+                  <li><a href="{{ url_for('elastatus.ec2', account=current_account, region=current_region) }}">{{ account }}</a></li>
                   {% else %}
                   {% set args = request.view_args.copy() %}
                   {% do args.update({'account': account}) %}
-                  <li><a href="{{ url_for('elastatus.'+current_service, **args) }}">{{ account.capitalize() }}</a></li>
+                  <li><a href="{{ url_for('elastatus.'+current_service, **args) }}">{{ account }}</a></li>
                   {% endif %}
                 {% endfor %}
                 </ul>
@@ -101,15 +106,7 @@
                 <ul class="dropdown-menu">
                 {% for service in config['CONFIG']['aws']['services'] %}
                   <li>
-<<<<<<< HEAD
-                    <a href="/{{ current_account }}/{{current_region}}/{{ service }}">{{ service.upper() }}</a></li>
-=======
-                    {% if service == "route53" %}
-                    <a href="{{ url_for('elastatus.'+service, account=config['CONFIG']['route53']['account'], region=current_region) }}">{{ service.upper() }}</a></li>
-                    {% else %}
                     <a href="{{ url_for('elastatus.'+service, account=current_account, region=current_region) }}">{{ service.upper() }}</a></li>
-                    {% endif %}
->>>>>>> upstream/master
                 {% endfor %}
                 </ul>
               </li>
