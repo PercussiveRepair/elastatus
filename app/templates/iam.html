@@ -6,12 +6,16 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Created Date</th>
+            <th>Password Last Used</th>
         </tr>
     </thead>
     <tbody>
         {% for user in users %}
         <tr>
             <td>{{ user['user_name'] }}</td>
+            <td>{{ user['create_date']}}</td>
+            <td>{{ user['password_last_used']}}</td>
         </tr>
         {% endfor %}
     </tbody>
