@@ -9,6 +9,7 @@ import yaml
 app = Flask(__name__)
 app.secret_key = 'SUPERSECRET' # you should change this to something equally random
 app.config['CONFIG_FILE'] = os.path.abspath('app/config.yaml')
+app.config['PROPAGATE_EXCEPTIONS'] = True
 configStr = open(app.config['CONFIG_FILE'], 'r')
 app.config['CONFIG'] = yaml.load(configStr)
 sqlite_db = os.path.abspath('db/elastatus.db')
